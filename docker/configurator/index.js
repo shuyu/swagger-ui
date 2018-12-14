@@ -8,7 +8,30 @@ const indent = require("./helpers").indent
 const START_MARKER = "// Begin Swagger UI call region"
 const END_MARKER = "// End Swagger UI call region"
 
-const targetPath = path.normalize(process.cwd() + "/" + process.argv[2])
+
+
+const nginxRoot="/usr/share/nginx/html";
+const targetPath = path.join(nginxRoot, 'index.html');//path.normalize(process.cwd() + "/" + process.argv[2])
+const specPath = path.join(nginxRoot, 'specs');
+
+
+const specFiles = fs.readdirSync(specPath) || [];
+let specs = [];
+specFiles.forEach((obj) => {
+  specs.push({
+    name: path.parse(obj).name,
+    url: path.join('./specs', obj)
+  })
+});
+
+// console.log('specs');
+// console.log(specs);
+// console.log("specPath");
+// console.log(specPath); 
+// console.log("process argv");
+// console.log(process.argv);
+// console.log("targetPath");
+// console.log(targetPath);
 
 const originalHtmlContent = fs.readFileSync(targetPath, "utf8")
 
@@ -35,15 +58,39 @@ if (startMarkerIndex < 0 || endMarkerIndex < 0) {
   process.exit(0)
 }
 
+console.log("env");
+console.log(process.env);
+
 fs.writeFileSync(
   targetPath,
   `${beforeStartMarkerContent}
       ${START_MARKER}
       const ui = SwaggerUIBundle({
-        ${indent(translator(process.env, { injectBaseConfig: true }), 8, 2)}
+        urls: ${JSON.stringify(specs)},
+        dom_id: "#swagger-ui",
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
       })
       
       ${indent(oauthBlockBuilder(process.env), 6, 2)}
       ${END_MARKER}
 ${afterEndMarkerContent}`
 )
+
+// console.log("write");
+// console.log(`${beforeStartMarkerContent}
+// ${START_MARKER}
+// const ui = SwaggerUIBundle({
+//   ${indent(translator(process.env, { injectBaseConfig: true }), 8, 2)}
+// })
+
+// ${indent(oauthBlockBuilder(process.env), 6, 2)}
+// ${END_MARKER}
+// ${afterEndMarkerContent}`)

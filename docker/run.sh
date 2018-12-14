@@ -5,7 +5,12 @@ BASE_URL=${BASE_URL:-/}
 NGINX_ROOT=/usr/share/nginx/html
 INDEX_FILE=$NGINX_ROOT/index.html
 
-node /usr/share/nginx/configurator $INDEX_FILE
+if [ -d "$SWAGGER_FOLDER" ]; then 
+    cp -r $SWAGGER_FOLDER $NGINX_ROOT
+fi
+
+node /usr/share/nginx/configurator 
+# $INDEX_FILE
 
 replace_in_index () {
   if [ "$1" != "**None**" ]; then
@@ -29,12 +34,12 @@ fi
 
 replace_in_index myApiKeyXXXX123456789 $API_KEY
 
-if [[ -f $SWAGGER_JSON ]]; then
-  cp -s $SWAGGER_JSON $NGINX_ROOT
-  REL_PATH="./$(basename $SWAGGER_JSON)"
-  sed -i "s|https://petstore.swagger.io/v2/swagger.json|$REL_PATH|g" $INDEX_FILE
-  sed -i "s|http://example.com/api|$REL_PATH|g" $INDEX_FILE
-fi
+# if [[ -f $SWAGGER_JSON ]]; then
+#   cp -s $SWAGGER_JSON $NGINX_ROOT
+#   REL_PATH="./$(basename $SWAGGER_JSON)"
+#   sed -i "s|https://petstore.swagger.io/v2/swagger.json|$REL_PATH|g" $INDEX_FILE
+#   sed -i "s|http://example.com/api|$REL_PATH|g" $INDEX_FILE
+# fi
 
 # replace the PORT that nginx listens on if PORT is supplied
 if [[ -n "${PORT}" ]]; then
