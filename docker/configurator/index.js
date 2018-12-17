@@ -18,10 +18,16 @@ const specPath = path.join(nginxRoot, 'specs');
 const specFiles = fs.readdirSync(specPath) || [];
 let specs = [];
 specFiles.forEach((obj) => {
-  specs.push({
-    name: path.parse(obj).name,
-    url: path.join('./specs', obj)
-  })
+  console.log('spec file ' + obj);
+  const fileExt = path.extname(obj).toLowerCase();
+  console.log(fileExt);
+  if (fileExt == '.json' || fileExt == '.yaml') {
+    specs.push({
+      name: path.parse(obj).name,
+      url: path.join('./specs', obj)
+    })
+    console.log('push file ' + obj);
+  }
 });
 
 // console.log('specs');

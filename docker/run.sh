@@ -1,11 +1,14 @@
 #! /bin/sh
 
+echo "run.sh"
+
 set -e
 BASE_URL=${BASE_URL:-/}
 NGINX_ROOT=/usr/share/nginx/html
 INDEX_FILE=$NGINX_ROOT/index.html
 
 if [ -d "$SWAGGER_FOLDER" ]; then 
+    rm -rf $NGINX_ROOT$SWAGGER_FOLDER
     cp -r $SWAGGER_FOLDER $NGINX_ROOT
 fi
 
