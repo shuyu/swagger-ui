@@ -30,15 +30,6 @@ specFiles.forEach((obj) => {
   }
 });
 
-// console.log('specs');
-// console.log(specs);
-// console.log("specPath");
-// console.log(specPath); 
-// console.log("process argv");
-// console.log(process.argv);
-// console.log("targetPath");
-// console.log(targetPath);
-
 const originalHtmlContent = fs.readFileSync(targetPath, "utf8")
 
 const startMarkerIndex = originalHtmlContent.indexOf(START_MARKER)
@@ -71,21 +62,7 @@ fs.writeFileSync(
   targetPath,
   `${beforeStartMarkerContent}
       ${START_MARKER}
-      const ui = SwaggerUIBundle({
-        urls: ${JSON.stringify(specs)},
-        dom_id: "#swagger-ui",
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout"
-      })
-      
-      ${indent(oauthBlockBuilder(process.env), 6, 2)}
+      urls: ${JSON.stringify(specs)},
       ${END_MARKER}
 ${afterEndMarkerContent}`
 )

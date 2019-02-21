@@ -37,18 +37,20 @@
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
     window.onload = function() {
-      
-      
-      
-      
-      
-      
-      
-      // Begin Swagger UI call region
+
+
+
+
+
+
+
+
       const ui = SwaggerUIBundle({
+        // Begin Swagger UI call region
         urls: [
 
         ],
+        // End Swagger UI call region
         dom_id: "#swagger-ui",
         deepLinking: true,
         presets: [
@@ -58,18 +60,14 @@
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
         ],
-        layout: "StandaloneLayout"
+        layout: "StandaloneLayout",
+        onComplete: function() {
+          ui.preauthorizeApiKey('X-Shopback-Domain', 'www.shopback.sg');
+          ui.preauthorizeApiKey('X-Shopback-Agent', 'sbiosagent/2.8.0');
+          ui.preauthorizeApiKey('X-Shopback-Client-User-Agent', 'sbiosagent/2.8.0');
+          ui.preauthorizeApiKey('X-Shopback-Key', 'q452R0g0muV3OXP8VoE7q3wshmm2rdI3')
+        }
       })
-      
-      
-      // End Swagger UI call region
-
-
-
-
-
-
-
 
       window.ui = ui
     }
